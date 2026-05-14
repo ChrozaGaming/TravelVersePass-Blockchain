@@ -1,156 +1,372 @@
-# 🌍 TravelVerse Pass — Project Guide
-> Tugas Akhir Mata Kuliah Blockchain | NFT Tourist Pass sebagai Digital Travel Identity
+<div align="center">
+
+# 🌍 TravelVerse Pass
+
+## *Blockchain-Based Smart Tourism Platform*
+
+**NFT Tourist Pass sebagai Digital Travel Identity**
+
+<br/>
+
+![Status](https://img.shields.io/badge/status-in--development-yellow?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+![Network](https://img.shields.io/badge/network-Polygon%20Amoy-8247E5?style=for-the-badge&logo=polygon)
+![Solidity](https://img.shields.io/badge/solidity-0.8.20-363636?style=for-the-badge&logo=solidity)
+![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=next.js)
+
+<br/>
+
+> 🎓 **Tugas Akhir Mata Kuliah Blockchain**
+> Dokumen ini mengikuti gaya penulisan teknis **ISO/IEC** untuk konsistensi dan keterbacaan akademik.
+
+</div>
 
 ---
 
-## 👥 Anggota Kelompok
-- Ahsanta Khalqi Imany
-- Andika Pratama Putra
-- Bagus Setiawan
-- Hilmy Raihan Alkindy
+## 📑 Document Control
+
+<table>
+  <tr>
+    <td><b>📄 Document Title</b></td>
+    <td>TravelVerse Pass — Project Guide</td>
+    <td><b>🏷️ Version</b></td>
+    <td><code>1.0.0</code></td>
+  </tr>
+  <tr>
+    <td><b>📅 Date</b></td>
+    <td>2026-05-14</td>
+    <td><b>📊 Status</b></td>
+    <td><code>DRAFT</code></td>
+  </tr>
+  <tr>
+    <td><b>🔖 Classification</b></td>
+    <td>Academic / Open Source</td>
+    <td><b>🌐 Domain</b></td>
+    <td>Smart Tourism · Web3</td>
+  </tr>
+</table>
 
 ---
 
-## 📋 Daftar Isi
-1. [Overview Proyek](#1-overview-proyek)
-2. [Tech Stack](#2-tech-stack)
-3. [Struktur Folder](#3-struktur-folder)
-4. [Roadmap Build](#4-roadmap-build)
-5. [Smart Contracts](#5-smart-contracts)
-6. [Setup Environment](#6-setup-environment)
-7. [Vibe Coding Prompts](#7-vibe-coding-prompts)
-8. [MVP Scope](#8-mvp-scope)
-9. [Tips & Catatan Penting](#9-tips--catatan-penting)
+## 👥 Tim Pengembang
+
+<table>
+  <thead>
+    <tr>
+      <th align="center">No.</th>
+      <th align="left">Nama Lengkap</th>
+      <th align="center">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><b>01</b></td>
+      <td>👤 <b>Ahsanta Khalqi Imany</b></td>
+      <td align="center">Developer</td>
+    </tr>
+    <tr>
+      <td align="center"><b>02</b></td>
+      <td>👤 <b>Andika Pratama Putra</b></td>
+      <td align="center">Developer</td>
+    </tr>
+    <tr>
+      <td align="center"><b>03</b></td>
+      <td>👤 <b>Bagus Setiawan</b></td>
+      <td align="center">Developer</td>
+    </tr>
+    <tr>
+      <td align="center"><b>04</b></td>
+      <td>👤 <b>Hilmy Raihan Alkindy</b></td>
+      <td align="center">Developer</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
-## 1. Overview Proyek
+## 📋 Table of Contents
 
-**TravelVerse Pass** adalah platform smart tourism berbasis blockchain yang mengubah pengalaman wisata menjadi:
-- 🪙 **Collectible** — setiap kunjungan menghasilkan NFT badge
-- ✅ **Terverifikasi** — tiket dan kunjungan tidak bisa dipalsukan
-- 🎮 **Gamified** — sistem level dan reward token
+<table>
+<tr>
+<td width="50%" valign="top">
 
-### Masalah yang Diselesaikan
-| Masalah | Solusi |
-|---|---|
-| Tiket mudah dipalsukan | NFT Tourist Pass (ERC-721) sebagai tiket digital |
-| Tidak ada loyalty lintas destinasi | Reward Token (ERC-20) lintas destinasi |
-| Pengalaman wisata monoton | Gamifikasi: level, badge, challenge |
-| Tidak ada bukti perjalanan digital | Journey Timeline dari NFT collection |
+**📘 Section A — Pendahuluan**
+- [1. Scope & Overview](#1-scope--overview)
+- [2. Technology Stack](#2-technology-stack)
+- [3. System Architecture](#3-system-architecture)
+
+**📗 Section B — Implementation**
+- [4. Development Roadmap](#4-development-roadmap)
+- [5. Smart Contracts Specification](#5-smart-contracts-specification)
+- [6. Environment Setup](#6-environment-setup)
+
+</td>
+<td width="50%" valign="top">
+
+**📙 Section C — Operasional**
+- [7. Vibe Coding Prompts](#7-vibe-coding-prompts)
+- [8. MVP Scope](#8-mvp-scope)
+- [9. Best Practices & Notes](#9-best-practices--notes)
+
+**📕 Annexes**
+- [A. References](#annex-a--references)
+- [B. Glossary](#annex-b--glossary)
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 2. Tech Stack
+## 1. Scope & Overview
+
+### 1.1 Definisi Proyek
+
+> **TravelVerse Pass** adalah platform *smart tourism* berbasis blockchain yang mentransformasi pengalaman wisata menjadi aset digital yang terverifikasi, *collectible*, dan *gamified*.
+
+### 1.2 Value Proposition
+
+<table>
+<tr>
+<td align="center" width="33%">
+
+### 🪙
+#### **Collectible**
+Setiap kunjungan wisata menghasilkan NFT badge yang unik dan permanen.
+
+</td>
+<td align="center" width="33%">
+
+### ✅
+#### **Verified**
+Tiket dan bukti kunjungan tidak dapat dipalsukan berkat ledger blockchain.
+
+</td>
+<td align="center" width="33%">
+
+### 🎮
+#### **Gamified**
+Sistem level, badge, dan reward token meningkatkan engagement wisatawan.
+
+</td>
+</tr>
+</table>
+
+### 1.3 Permasalahan & Solusi
+
+| 🆔  | ❌ Permasalahan | ✅ Solusi yang Ditawarkan |
+|:---:|:---|:---|
+| `P-01` | Tiket wisata mudah dipalsukan | **NFT Tourist Pass (ERC-721)** sebagai tiket digital terverifikasi |
+| `P-02` | Tidak ada program loyalty lintas destinasi | **Reward Token (ERC-20)** yang berlaku lintas destinasi |
+| `P-03` | Pengalaman wisata yang monoton | **Gamifikasi**: level traveler, badge, dan challenge |
+| `P-04` | Tidak ada bukti perjalanan digital yang authentic | **Journey Timeline** dari koleksi NFT on-chain |
+
+---
+
+## 2. Technology Stack
+
+### 2.1 Stack Overview
+
+<table>
+<tr>
+<th align="center" width="20%">🎨 Layer</th>
+<th align="center" width="35%">🛠️ Technology</th>
+<th align="left" width="45%">📝 Rationale</th>
+</tr>
+<tr>
+<td align="center"><b>Frontend</b></td>
+<td align="center">Next.js 14 · Tailwind CSS · shadcn/ui</td>
+<td>Full-stack framework dengan App Router & API Routes built-in</td>
+</tr>
+<tr>
+<td align="center"><b>Smart Contract</b></td>
+<td align="center">Solidity 0.8.20 · Hardhat · OpenZeppelin</td>
+<td>Ekosistem paling matang dengan dokumentasi terbaik</td>
+</tr>
+<tr>
+<td align="center"><b>Wallet Layer</b></td>
+<td align="center">ethers.js v6 · MetaMask</td>
+<td>Library interaksi blockchain yang ringan dan modern</td>
+</tr>
+<tr>
+<td align="center"><b>Network</b></td>
+<td align="center">Polygon Amoy Testnet</td>
+<td>Gas fee gratis, fast finality, ideal untuk demo akademik</td>
+</tr>
+<tr>
+<td align="center"><b>Storage</b></td>
+<td align="center">Pinata (IPFS)</td>
+<td>Decentralized storage dengan free tier yang generous</td>
+</tr>
+<tr>
+<td align="center"><b>Backend</b></td>
+<td align="center">Next.js API Routes</td>
+<td>Tidak perlu server terpisah, deploy serverless</td>
+</tr>
+<tr>
+<td align="center"><b>Database</b></td>
+<td align="center">Supabase (PostgreSQL)</td>
+<td>Setup 5 menit, auth built-in, free tier memadai</td>
+</tr>
+</table>
+
+### 2.2 Justifikasi Pemilihan Stack
+
+| Kriteria | Alasan |
+|:---|:---|
+| **🚀 Time-to-Market** | Stack monolitik mempercepat development untuk timeline akademik |
+| **💰 Cost Efficiency** | Semua tools menggunakan free tier — biaya pengembangan = 0 |
+| **🤖 AI Compatibility** | Dokumentasi yang melimpah → AI assistant menghasilkan kode lebih akurat |
+| **📚 Community Support** | Komunitas besar di Stack Overflow, GitHub, dan Discord |
+
+---
+
+## 3. System Architecture
+
+### 3.1 Struktur Direktori
 
 ```
-Frontend    →  Next.js 14 + Tailwind CSS + shadcn/ui
-Blockchain  →  Solidity + Hardhat + OpenZeppelin
-Wallet      →  ethers.js v6 + MetaMask
-Network     →  Polygon Amoy Testnet (gratis, cepat)
-Storage     →  Pinata (IPFS — free tier)
-Backend     →  Next.js API Routes (built-in, tidak perlu server terpisah)
-Database    →  Supabase (PostgreSQL — free tier)
-```
-
-### Kenapa Stack Ini?
-- **Next.js** — handle frontend + backend sekaligus, tidak perlu Laravel/Express terpisah
-- **Polygon Amoy** — gas fee gratis untuk testnet, cocok untuk demo akademik
-- **Supabase** — setup 5 menit, tidak perlu konfigurasi server database
-- **Hardhat** — paling banyak contohnya, AI lebih akurat generate code-nya
-
----
-
-## 3. Struktur Folder
-
-```
-travelverse/
+📦 travelverse/
 │
-├── contracts/                      # Smart Contracts (Solidity)
-│   ├── TouristPass.sol             # ERC-721: identitas wisata digital
-│   ├── DestinationBadge.sol        # ERC-721: badge NFT per destinasi
-│   └── RewardToken.sol             # ERC-20: token loyalty
+├── 📂 contracts/                    # 🔗 Smart Contracts (Solidity)
+│   ├── 📜 TouristPass.sol           # ERC-721: identitas wisata digital
+│   ├── 📜 DestinationBadge.sol      # ERC-721: badge NFT per destinasi
+│   └── 📜 RewardToken.sol           # ERC-20: token loyalty
 │
-├── scripts/                        # Hardhat scripts
-│   └── deploy.js                   # Deploy semua contract sekaligus
+├── 📂 scripts/                      # ⚙️  Hardhat scripts
+│   └── 📄 deploy.js                 # Deploy semua contract sekaligus
 │
-├── test/                           # Unit test contract
-│   └── TravelVerse.test.js
+├── 📂 test/                         # 🧪 Unit test contract
+│   └── 📄 TravelVerse.test.js
 │
-├── frontend/                       # Next.js App
-│   ├── app/
-│   │   ├── page.tsx                # Landing page
-│   │   ├── dashboard/
-│   │   │   └── page.tsx            # Traveler dashboard
-│   │   ├── destinations/
-│   │   │   └── page.tsx            # List destinasi wisata
-│   │   ├── scan/
-│   │   │   └── page.tsx            # QR scanner page
-│   │   └── api/
-│   │       ├── qr/route.ts         # Generate & verifikasi QR
-│   │       └── verify/route.ts     # Verifikasi kunjungan
+├── 📂 frontend/                     # 🎨 Next.js Application
+│   ├── 📂 app/
+│   │   ├── 📄 page.tsx              # 🏠 Landing page
+│   │   ├── 📂 dashboard/
+│   │   │   └── 📄 page.tsx          # 📊 Traveler dashboard
+│   │   ├── 📂 destinations/
+│   │   │   └── 📄 page.tsx          # 🗺️  List destinasi wisata
+│   │   ├── 📂 scan/
+│   │   │   └── 📄 page.tsx          # 📷 QR scanner page
+│   │   └── 📂 api/
+│   │       ├── 📄 qr/route.ts       # Generate & verifikasi QR
+│   │       └── 📄 verify/route.ts   # Verifikasi kunjungan
 │   │
-│   ├── components/
-│   │   ├── WalletConnect.tsx       # Tombol connect MetaMask
-│   │   ├── NFTBadgeCard.tsx        # Card tampilan badge NFT
-│   │   ├── LevelProgress.tsx       # Progress bar level traveler
-│   │   └── JourneyTimeline.tsx     # Timeline perjalanan
+│   ├── 📂 components/
+│   │   ├── 🧩 WalletConnect.tsx     # Connect MetaMask button
+│   │   ├── 🧩 NFTBadgeCard.tsx      # NFT badge card display
+│   │   ├── 🧩 LevelProgress.tsx     # Traveler level progress bar
+│   │   └── 🧩 JourneyTimeline.tsx   # Travel journey timeline
 │   │
-│   └── lib/
-│       ├── contracts.ts            # ABI + contract address
-│       ├── supabase.ts             # Supabase client
-│       └── ethers.ts               # Ethers.js helper
+│   └── 📂 lib/
+│       ├── 📄 contracts.ts          # ABI + contract address
+│       ├── 📄 supabase.ts           # Supabase client
+│       └── 📄 ethers.ts             # Ethers.js helper
 │
-├── hardhat.config.js               # Konfigurasi Hardhat + Polygon Amoy
-├── .env                            # API keys (jangan di-commit!)
-└── README.md
+├── ⚙️  hardhat.config.js            # Konfigurasi Hardhat + Polygon Amoy
+├── 🔐 .env                          # API keys (NEVER COMMIT!)
+└── 📖 README.md                     # Dokumentasi proyek ini
+```
+
+### 3.2 High-Level Flow
+
+```mermaid
+flowchart LR
+    A[👤 Traveler] -->|Connect Wallet| B[🦊 MetaMask]
+    B -->|Mint Pass| C[📜 TouristPass NFT]
+    A -->|Scan QR| D[📷 QR Scanner]
+    D -->|Verify| E[🔐 API Backend]
+    E -->|Mint Badge| F[🏅 DestinationBadge NFT]
+    E -->|Reward| G[🪙 RewardToken]
+    F --> H[📊 Dashboard]
+    G --> H
 ```
 
 ---
 
-## 4. Roadmap Build
+## 4. Development Roadmap
 
-### Phase 1 — Smart Contracts *(Hari 1–3)*
-```
-[ ] TouristPass.sol   → ERC-721, 1 per wallet, simpan level & visited_count
-[ ] DestinationBadge.sol → ERC-721, mint saat QR scan, 1 claim per hari
-[ ] RewardToken.sol   → ERC-20, earned saat check-in
-[ ] Deploy ke Polygon Amoy Testnet
-[ ] Verifikasi di Polygonscan
-```
+### 4.1 Phase Breakdown
 
-### Phase 2 — Frontend Core *(Hari 4–7)*
-```
-[ ] Wallet connect MetaMask
-[ ] Halaman mint Tourist Pass
-[ ] Dashboard: tampilkan badge collection
-[ ] Tampilkan level + progress bar
-[ ] Halaman list destinasi
-```
+<table>
+<tr>
+<th width="15%">🚦 Phase</th>
+<th width="25%">📅 Timeline</th>
+<th width="60%">🎯 Deliverables</th>
+</tr>
+<tr>
+<td align="center"><b>Phase 1</b><br/>🔗<br/><i>Smart Contracts</i></td>
+<td align="center"><b>Hari 1–3</b></td>
+<td>
 
-### Phase 3 — QR System *(Hari 8–9)*
-```
-[ ] Backend: generate QR per destinasi (signed + expiry)
-[ ] Frontend: QR scanner (pakai react-qr-reader)
-[ ] Verifikasi QR → trigger mint badge NFT
-[ ] Supabase: simpan visit history & tx_hash
-```
+- [ ] `TouristPass.sol` — ERC-721, 1 per wallet
+- [ ] `DestinationBadge.sol` — ERC-721, mint via QR scan
+- [ ] `RewardToken.sol` — ERC-20 loyalty token
+- [ ] Deploy ke Polygon Amoy Testnet
+- [ ] Verifikasi di Polygonscan
 
-### Phase 4 — Polish & Presentasi *(Hari 10–11)*
-```
-[ ] Journey Timeline (visual koleksi perjalanan)
-[ ] Level naik otomatis saat milestone tercapai
-[ ] Loading state + toast notification
-[ ] Responsive mobile
-[ ] Demo video / slides presentasi
-```
+</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 2</b><br/>🎨<br/><i>Frontend Core</i></td>
+<td align="center"><b>Hari 4–7</b></td>
+<td>
+
+- [ ] Wallet connect dengan MetaMask
+- [ ] Halaman mint Tourist Pass
+- [ ] Dashboard badge collection
+- [ ] Level + progress bar
+- [ ] Halaman list destinasi
+
+</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 3</b><br/>📷<br/><i>QR System</i></td>
+<td align="center"><b>Hari 8–9</b></td>
+<td>
+
+- [ ] Backend: generate QR (signed + expiry)
+- [ ] Frontend: QR scanner (`react-qr-reader`)
+- [ ] Verifikasi QR → mint badge NFT
+- [ ] Supabase: simpan visit history & tx_hash
+
+</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 4</b><br/>✨<br/><i>Polish & Demo</i></td>
+<td align="center"><b>Hari 10–11</b></td>
+<td>
+
+- [ ] Journey Timeline (visualisasi perjalanan)
+- [ ] Auto level-up pada milestone
+- [ ] Loading state + toast notification
+- [ ] Responsive mobile
+- [ ] Demo video / slide presentasi
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 5. Smart Contracts
+## 5. Smart Contracts Specification
 
-### 5.1 TouristPass.sol (ERC-721)
-**Fungsi:** Identitas wisata digital — 1 NFT per wallet
+### 5.1 Contract Index
+
+| 🆔 | Contract Name | Standard | Purpose |
+|:---:|:---|:---:|:---|
+| `SC-01` | `TouristPass.sol` | **ERC-721** | Identitas wisata digital (1 per wallet) |
+| `SC-02` | `DestinationBadge.sol` | **ERC-721** | Badge NFT collectible per destinasi |
+| `SC-03` | `RewardToken.sol` | **ERC-20** | Token loyalty untuk aktivitas wisata |
+
+---
+
+### 5.2 `TouristPass.sol` — ERC-721
+
+> **Fungsi:** Identitas wisata digital, dengan batasan **1 NFT per wallet**.
+
+<details>
+<summary>📄 <b>View Source Code</b></summary>
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -199,8 +415,16 @@ contract TouristPass is ERC721, Ownable {
 }
 ```
 
-### 5.2 DestinationBadge.sol (ERC-721)
-**Fungsi:** Badge NFT collectible per destinasi wisata
+</details>
+
+---
+
+### 5.3 `DestinationBadge.sol` — ERC-721
+
+> **Fungsi:** Badge NFT collectible yang di-mint setiap kali user check-in di destinasi.
+
+<details>
+<summary>📄 <b>View Source Code</b></summary>
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -212,9 +436,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract DestinationBadge is ERC721, Ownable {
     uint256 private _tokenIds;
 
-    // user => destinationId => lastClaimDay
     mapping(address => mapping(uint256 => uint256)) public lastClaim;
-    // user => destinationId => sudah pernah claim
     mapping(address => mapping(uint256 => bool)) public hasClaimed;
 
     event BadgeMinted(address indexed user, uint256 destinationId, uint256 tokenId);
@@ -235,8 +457,16 @@ contract DestinationBadge is ERC721, Ownable {
 }
 ```
 
-### 5.3 RewardToken.sol (ERC-20)
-**Fungsi:** Token loyalty untuk aktivitas wisata
+</details>
+
+---
+
+### 5.4 `RewardToken.sol` — ERC-20
+
+> **Fungsi:** Token loyalty (`TVT`) yang diberikan saat user melakukan check-in.
+
+<details>
+<summary>📄 <b>View Source Code</b></summary>
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -258,33 +488,76 @@ contract RewardToken is ERC20, Ownable {
 }
 ```
 
-### 5.4 Sistem Level Traveler
-```
-Beginner          →  0–5 lokasi dikunjungi
-Explorer          →  6–20 lokasi
-Adventurer        →  21–50 lokasi
-Legendary Traveler →  50+ lokasi
-```
+</details>
 
 ---
 
-## 6. Setup Environment
+### 5.5 Sistem Level Traveler
 
-### 6.1 Setup Hardhat
+<table>
+<tr>
+<th align="center">🏆 Tier</th>
+<th align="center">📛 Level</th>
+<th align="center">📍 Visited Count</th>
+<th align="center">🎁 Privilege</th>
+</tr>
+<tr>
+<td align="center">🥉</td>
+<td align="center"><b>Beginner</b></td>
+<td align="center"><code>0 – 5</code></td>
+<td align="center">Basic badge</td>
+</tr>
+<tr>
+<td align="center">🥈</td>
+<td align="center"><b>Explorer</b></td>
+<td align="center"><code>6 – 20</code></td>
+<td align="center">Silver badge + bonus token</td>
+</tr>
+<tr>
+<td align="center">🥇</td>
+<td align="center"><b>Adventurer</b></td>
+<td align="center"><code>21 – 50</code></td>
+<td align="center">Gold badge + special access</td>
+</tr>
+<tr>
+<td align="center">👑</td>
+<td align="center"><b>Legendary Traveler</b></td>
+<td align="center"><code>50+</code></td>
+<td align="center">Exclusive perks + VIP status</td>
+</tr>
+</table>
+
+---
+
+## 6. Environment Setup
+
+### 6.1 Prerequisites
+
+| Tool | Min. Version | Verifikasi |
+|:---|:---:|:---|
+| 🟢 Node.js | `≥ 18.x` | `node --version` |
+| 📦 npm | `≥ 9.x` | `npm --version` |
+| 🦊 MetaMask | Latest | Browser extension installed |
+| 💼 Git | `≥ 2.x` | `git --version` |
+
+### 6.2 Setup Hardhat
+
 ```bash
 mkdir travelverse && cd travelverse
 npm init -y
 npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
 npx hardhat init
-# Pilih: Create a JavaScript project
+# ✅ Pilih: Create a JavaScript project
 
 npm install @openzeppelin/contracts
 ```
 
-### 6.2 Setup Next.js
+### 6.3 Setup Next.js Frontend
+
 ```bash
 npx create-next-app@latest frontend
-# Pilih: TypeScript ✓ | Tailwind CSS ✓ | App Router ✓ | ESLint ✓
+# ✅ TypeScript    | ✅ Tailwind CSS
+# ✅ App Router   | ✅ ESLint
 
 cd frontend
 npm install ethers @supabase/supabase-js
@@ -292,7 +565,8 @@ npm install react-qr-reader qrcode
 npm install @shadcn/ui
 ```
 
-### 6.3 Konfigurasi Hardhat (hardhat.config.js)
+### 6.4 Konfigurasi `hardhat.config.js`
+
 ```javascript
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
@@ -309,35 +583,51 @@ module.exports = {
 };
 ```
 
-### 6.4 File .env
+### 6.5 Environment Variables (`.env`)
+
+> ⚠️ **PERINGATAN:** Jangan pernah commit file `.env` ke repository publik!
+
 ```env
+# 🔐 Wallet & Blockchain
 PRIVATE_KEY=your_metamask_private_key_here
+
+# 🗄️  Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# 📜 Deployed Contract Addresses
 NEXT_PUBLIC_TOURIST_PASS_ADDRESS=deployed_contract_address
 NEXT_PUBLIC_BADGE_ADDRESS=deployed_contract_address
 NEXT_PUBLIC_TOKEN_ADDRESS=deployed_contract_address
+
+# 🔒 QR Security
 QR_SECRET=your_random_secret_for_qr_signing
 ```
 
-### 6.5 Deploy Contract
+### 6.6 Deploy Contracts
+
 ```bash
 npx hardhat run scripts/deploy.js --network amoy
 ```
 
-### 6.6 Mendapatkan MATIC Testnet (Gratis)
-1. Buka https://faucet.polygon.technology/
-2. Pilih **Amoy Testnet**
-3. Paste wallet address
-4. Klaim MATIC gratis untuk gas fee
+### 6.7 Acquiring Test MATIC
+
+| Step | Action |
+|:---:|:---|
+| **1️⃣** | Buka [Polygon Faucet](https://faucet.polygon.technology/) |
+| **2️⃣** | Pilih **Amoy Testnet** |
+| **3️⃣** | Paste wallet address |
+| **4️⃣** | Klaim **MATIC** gratis untuk gas fee |
 
 ---
 
 ## 7. Vibe Coding Prompts
 
-Template prompt siap pakai untuk AI (Claude/ChatGPT):
+> 💡 Template prompt siap pakai untuk AI assistant (Claude / ChatGPT / Cursor).
 
-### Smart Contract
+<details>
+<summary>📝 <b>7.1 — Smart Contract Generation</b></summary>
+
 ```
 Buatkan Solidity smart contract ERC-721 bernama TouristPass menggunakan 
 OpenZeppelin. Contract ini mint 1 NFT per wallet saat user register. 
@@ -348,7 +638,11 @@ level berdasarkan visited_count: 0-5 = Beginner, 6-20 = Explorer,
 21-50 = Adventurer, 50+ = Legendary Traveler.
 ```
 
-### Wallet Connect Component
+</details>
+
+<details>
+<summary>📝 <b>7.2 — Wallet Connect Component</b></summary>
+
 ```
 Buatkan React component di Next.js TypeScript untuk connect MetaMask wallet.
 Tampilkan tombol 'Connect Wallet', setelah connect tampilkan address yang 
@@ -357,7 +651,11 @@ dan Tailwind CSS. Handle kasus: MetaMask tidak terinstall, user reject,
 dan network salah (harus Polygon Amoy chainId 80002).
 ```
 
-### QR Generation API
+</details>
+
+<details>
+<summary>📝 <b>7.3 — QR Generation API</b></summary>
+
 ```
 Buatkan Next.js API Route (App Router) untuk generate QR code destinasi wisata.
 QR berisi: destination_id, timestamp, dan HMAC signature menggunakan secret key.
@@ -365,7 +663,11 @@ QR expired setelah 15 menit. Gunakan library 'qrcode' untuk generate QR image.
 Return QR sebagai base64 image string.
 ```
 
-### QR Verifikasi & Mint Badge
+</details>
+
+<details>
+<summary>📝 <b>7.4 — QR Verifikasi & Mint Badge</b></summary>
+
 ```
 Buatkan Next.js API Route untuk verifikasi QR scan dan trigger mint NFT badge.
 Flow: terima QR data → validasi signature → cek expiry → cek user belum 
@@ -374,7 +676,11 @@ ethers.js → simpan record ke Supabase (user_wallet, destination_id, timestamp,
 tx_hash) → return sukses/gagal dengan pesan yang jelas.
 ```
 
-### Dashboard Traveler
+</details>
+
+<details>
+<summary>📝 <b>7.5 — Dashboard Traveler</b></summary>
+
 ```
 Buatkan halaman dashboard Next.js TypeScript untuk traveler TravelVerse Pass.
 Tampilkan: nama user, level saat ini, progress bar menuju level berikutnya,
@@ -383,7 +689,11 @@ dimiliki (gambar + nama destinasi). Ambil data dari smart contract menggunakan
 ethers.js v6. Gunakan Tailwind CSS dengan tema warna hijau dan biru.
 ```
 
-### Journey Timeline
+</details>
+
+<details>
+<summary>📝 <b>7.6 — Journey Timeline</b></summary>
+
 ```
 Buatkan React component Journey Timeline untuk menampilkan riwayat perjalanan 
 wisata user. Data diambil dari Supabase (destination_name, visit_date, tx_hash).
@@ -392,67 +702,164 @@ passport. Setiap item tampilkan: icon destinasi, nama tempat, tanggal, dan
 link ke Polygonscan untuk lihat transaksi NFT-nya.
 ```
 
+</details>
+
 ---
 
 ## 8. MVP Scope
 
-### ✅ Wajib Ada (Minimum untuk Lulus)
-- [ ] Wallet login dengan MetaMask
-- [ ] Mint Tourist Pass NFT (1x per wallet)
+### 8.1 Priority Matrix
+
+<table>
+<tr>
+<th width="33%" align="center">✅ MUST HAVE</th>
+<th width="33%" align="center">🎯 NICE TO HAVE</th>
+<th width="33%" align="center">❌ OUT OF SCOPE</th>
+</tr>
+<tr valign="top">
+<td>
+
+*Wajib untuk kelulusan*
+
+- [ ] Wallet login MetaMask
+- [ ] Mint Tourist Pass NFT (1x/wallet)
 - [ ] List destinasi wisata
-- [ ] Generate & tampilkan QR per destinasi
-- [ ] Scan QR → verifikasi → mint Badge NFT
+- [ ] Generate QR per destinasi
+- [ ] Scan QR → mint Badge NFT
 - [ ] Earn Reward Token saat check-in
-- [ ] Dashboard: tampilkan badge collection & level
-- [ ] Deploy ke Polygon Amoy Testnet
+- [ ] Dashboard badge & level
+- [ ] Deploy ke Polygon Amoy
 
-### 🎯 Nice to Have (Nilai Plus)
+</td>
+<td>
+
+*Nilai tambahan*
+
 - [ ] Journey Timeline visual
-- [ ] Analytics sederhana (total visit, destinasi populer)
+- [ ] Analytics (total visit, populer)
 - [ ] Notifikasi level up
-- [ ] Responsive mobile
+- [ ] Responsive mobile design
+- [ ] Dark mode toggle
+- [ ] Multi-language support
 
-### ❌ Skip Dulu (Post-MVP)
-- Marketplace NFT
-- AR integration
-- DAO governance
-- Cross-chain bridge
-- Anti-GPS spoofing lanjutan
+</td>
+<td>
+
+*Skip untuk MVP*
+
+- ❌ Marketplace NFT
+- ❌ AR integration
+- ❌ DAO governance
+- ❌ Cross-chain bridge
+- ❌ Anti-GPS spoofing lanjutan
+- ❌ Mobile native app
+
+</td>
+</tr>
+</table>
+
+### 8.2 Acceptance Criteria
+
+| 🆔 | Requirement | Severity |
+|:---:|:---|:---:|
+| `REQ-01` | User dapat connect MetaMask wallet | 🔴 Critical |
+| `REQ-02` | User dapat mint Tourist Pass (1x per wallet) | 🔴 Critical |
+| `REQ-03` | User dapat scan QR dan menerima Badge NFT | 🔴 Critical |
+| `REQ-04` | User dapat melihat koleksi NFT di dashboard | 🔴 Critical |
+| `REQ-05` | Level otomatis update sesuai visited count | 🟡 High |
+| `REQ-06` | Reward token bertambah setiap check-in | 🟡 High |
+| `REQ-07` | Journey timeline menampilkan riwayat visual | 🟢 Medium |
 
 ---
 
-## 9. Tips & Catatan Penting
+## 9. Best Practices & Notes
 
-### ⚠️ Jangan Lupa
+### 9.1 Critical Reminders
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### ⚠️ Security Warnings
+
 1. **Jangan commit `.env`** — tambahkan ke `.gitignore` dari awal
-2. **Jangan pakai mainnet** — testnet Amoy gratis, mainnet pakai uang sungguhan
-3. **Simpan deployed contract address** — catat setelah deploy, dibutuhkan di frontend
-4. **Backup private key wallet** — jangan sampai hilang
+2. **Jangan pakai mainnet** — gunakan testnet Amoy untuk demo
+3. **Backup private key** wallet di tempat aman
+4. **Simpan deployed address** — dibutuhkan di frontend
 
-### 🔒 Keamanan QR (untuk Presentasi)
-- QR harus **dinamis** + **expired** (15 menit) — bukan QR statis
-- Gunakan **HMAC signature** agar QR tidak bisa dipalsukan
-- Validasi di **server-side**, bukan client-side
+</td>
+<td width="50%" valign="top">
 
-### 🎓 Poin Akademik yang Bisa Dibahas
-- **NFT Utility** vs NFT spekulatif
-- **Blockchain adoption** di sektor pariwisata Indonesia
-- **Tokenomics** sederhana: supply, emission, use case
-- **QR Verification Security** di sistem berbasis blockchain
-- **Decentralized Identity** vs identitas tradisional
-- **Gamification Economy** untuk meningkatkan retensi wisatawan
+#### 🔒 QR Security Standards
 
-### 📚 Referensi Berguna
-- OpenZeppelin Contracts: https://docs.openzeppelin.com/contracts
-- Hardhat Docs: https://hardhat.org/docs
-- Polygon Amoy Faucet: https://faucet.polygon.technology
-- Pinata (IPFS): https://www.pinata.cloud
-- Supabase Docs: https://supabase.com/docs
-- ethers.js v6 Docs: https://docs.ethers.org/v6
+1. QR harus **dinamis** dengan **expiry 15 menit**
+2. Gunakan **HMAC signature** untuk anti-tampering
+3. Validasi selalu di **server-side**
+4. Log setiap percobaan validasi di Supabase
+
+</td>
+</tr>
+</table>
+
+### 9.2 Academic Discussion Points
+
+| 🎓 Topik | 💭 Sudut Pandang |
+|:---|:---|
+| **NFT Utility** | Pembanding NFT spekulatif vs utility-driven |
+| **Blockchain Adoption** | Implementasi di sektor pariwisata Indonesia |
+| **Tokenomics** | Supply, emission rate, dan use case TVT |
+| **QR Verification** | Keamanan sistem QR berbasis blockchain |
+| **Decentralized Identity** | DID vs identitas tradisional |
+| **Gamification Economy** | Retensi wisatawan via game mechanics |
+
+### 9.3 Recommended Workflow
+
+> 💡 **Workflow Vibe Coding:**
+
+```
+📋 PRD → 🧩 Breakdown Fitur → 🤖 AI Prompt per Komponen
+     ↓
+🔍 Review & Iterasi → 🔗 Integrasi → 🎬 Demo
+```
 
 ---
 
-> 💡 **Workflow Vibe Coding yang Disarankan:**
-> PRD → breakdown fitur → prompt AI per komponen → review & iterasi → integrasi → demo
+## Annex A — References
 
-*Dibuat untuk keperluan Tugas Akhir Mata Kuliah Blockchain*
+| 🔗 Resource | 🌐 URL |
+|:---|:---|
+| 🛡️ OpenZeppelin Contracts | https://docs.openzeppelin.com/contracts |
+| ⚒️  Hardhat Documentation | https://hardhat.org/docs |
+| 💧 Polygon Amoy Faucet | https://faucet.polygon.technology |
+| 📌 Pinata (IPFS) | https://www.pinata.cloud |
+| 🗄️  Supabase Documentation | https://supabase.com/docs |
+| 📚 ethers.js v6 Docs | https://docs.ethers.org/v6 |
+| 🔍 Polygonscan (Amoy) | https://amoy.polygonscan.com |
+
+---
+
+## Annex B — Glossary
+
+| 🔤 Term | 📖 Definition |
+|:---|:---|
+| **DApp** | *Decentralized Application* — aplikasi berbasis smart contract |
+| **ERC-20** | Standard token fungible di Ethereum (digunakan untuk RewardToken) |
+| **ERC-721** | Standard NFT non-fungible di Ethereum (digunakan untuk Pass & Badge) |
+| **Gas Fee** | Biaya transaksi pada blockchain Ethereum/Polygon |
+| **HMAC** | *Hash-based Message Authentication Code* — signature anti-tampering |
+| **IPFS** | *InterPlanetary File System* — protokol penyimpanan terdesentralisasi |
+| **Mint** | Proses pembuatan token / NFT baru di blockchain |
+| **Testnet** | Jaringan blockchain untuk testing (tidak menggunakan uang sungguhan) |
+| **Wallet** | Aplikasi penyimpan kunci privat untuk interaksi blockchain |
+
+---
+
+<div align="center">
+
+### 📜 *Document End*
+
+**Dibuat dengan ❤️ untuk Tugas Akhir Mata Kuliah Blockchain**
+
+<sub>© 2026 TravelVerse Pass Team — Released under MIT License</sub>
+
+</div>

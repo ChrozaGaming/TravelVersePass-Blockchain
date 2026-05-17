@@ -7,6 +7,7 @@ import {
   type CheckinEvent,
   type ExplorerDestination,
   type NetworkStats,
+  type RecentTx,
   type TransferEvent,
   TOKEN_ADDRESS,
   addressLabel,
@@ -15,6 +16,7 @@ import {
   getAllDestinations,
   getNetworkStats,
   getRecentCheckins,
+  getRecentTransactions,
   getRecentTransfers,
   relativeTime,
   shortAddr,
@@ -25,6 +27,7 @@ export default function ExplorerHome() {
   const router = useRouter();
   const [stats, setStats] = useState<NetworkStats | null>(null);
   const [transfers, setTransfers] = useState<TransferEvent[]>([]);
+  const [recentTxs, setRecentTxs] = useState<RecentTx[]>([]);
   const [checkins, setCheckins] = useState<CheckinEvent[]>([]);
   const [destinations, setDestinations] = useState<ExplorerDestination[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -35,15 +38,17 @@ export default function ExplorerHome() {
     let cancelled = false;
     async function load() {
       try {
-        const [s, t, c, d] = await Promise.all([
+        const [s, t, rt, c, d] = await Promise.all([
           getNetworkStats(),
           getRecentTransfers(50),
+          getRecentTransactions(30),
           getRecentCheckins(50),
           getAllDestinations(),
         ]);
         if (!cancelled) {
           setStats(s);
           setTransfers(t);
+          setRecentTxs(rt);
           setCheckins(c);
           setDestinations(d);
         }
@@ -195,6 +200,23 @@ export default function ExplorerHome() {
           </div>
         </section>
       )}
+
+      {/* Recent Transactions (semua tx network) */}
+      <section className="mb-8">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-slate-900">
+            ⚡ Recent Transactions (All Network)
+          </h2>
+          <span className="text-xs text-slate-500">
+            {recentTxs.length} latest tx across all blocks
+          </span>
+        </div>
+        <RecentTxTable
+          txs={recentTxs}
+          loading={loading}
+          tvtTransfers={transfers}
+        />
+      </section>
 
       {/* Recent Check-ins (BadgeMinted events) */}
       <section className="mb-8">
@@ -493,4 +515,170 @@ function AddressLink({ addr }: Readonly<{ addr: string }>) {
       {label ?? shortAddr(addr)}
     </Link>
   );
+}
+
+// =====================================================================
+// Recent Transactions Table (all network txs, not just TVT)
+// =====================================================================
+
+const TX_KIND_STYLE: Record<RecentTx["kind"], string> = {
+  "Contract Creation": "bg-purple-100 text-purple-700",
+  "Contract Call": "bg-blue-100 text-blue-700",
+  "ETH Transfer": "bg-emerald-100 text-emerald-700",
+  Empty: "bg-slate-100 text-slate-500",
+};
+
+function RecentTxTable({
+  txs,
+  loading,
+  tvtTransfers,
+}: Readonly<{
+  txs: RecentTx[];
+  loading: boolean;
+  tvtTransfers: TransferEvent[];
+}>) {
+  // Build map: txHash → total TVT yang dipindah dalam tx tsb.
+  // Satu tx bisa punya multiple Transfer events, kita sum semuanya.
+  const tvtByTx = useMemo(() => {
+    const map = new Map<string, bigint>();
+    for (const t of tvtTransfers) {
+      map.set(t.txHash, (map.get(t.txHash) ?? 0n) + t.value);
+    }
+    return map;
+  }, [tvtTransfers]);
+
+  if (loading && txs.length === 0) {
+    return <p className="text-slate-500">Memuat transactions...</p>;
+  }
+  if (txs.length === 0) {
+    return (
+      <div className="card text-center">
+        <p className="text-slate-500">Belum ada transaksi di network.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card p-0 overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead className="bg-slate-50 text-slate-600">
+          <tr>
+            <th className="text-left p-3 font-medium">Tx Hash</th>
+            <th className="text-left p-3 font-medium">Block</th>
+            <th className="text-left p-3 font-medium">Time</th>
+            <th className="text-left p-3 font-medium">Type</th>
+            <th className="text-left p-3 font-medium">From</th>
+            <th className="text-left p-3 font-medium">To / Method</th>
+            <th className="text-right p-3 font-medium">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {txs.map((t) => {
+            const tvtAmount = tvtByTx.get(t.hash);
+            return (
+              <tr
+                key={t.hash}
+                className="border-t border-slate-200 hover:bg-slate-50"
+              >
+                <td className="p-3 font-mono">
+                  <Link
+                    href={`/explorer/tx/${t.hash}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {shortHash(t.hash)}
+                  </Link>
+                </td>
+                <td className="p-3">
+                  <Link
+                    href={`/explorer/block/${t.blockNumber}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    #{t.blockNumber}
+                  </Link>
+                  <div className="text-xs text-slate-400">
+                    idx {t.blockIndex}
+                  </div>
+                </td>
+                <td className="p-3 text-slate-500 whitespace-nowrap text-xs">
+                  {t.timestamp ? relativeTime(t.timestamp) : "—"}
+                </td>
+                <td className="p-3">
+                  <span
+                    className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${TX_KIND_STYLE[t.kind]}`}
+                  >
+                    {t.kind}
+                  </span>
+                </td>
+                <td className="p-3 font-mono text-xs">
+                  <AddressLink addr={t.from} />
+                  <div className="text-slate-400">nonce {t.nonce}</div>
+                </td>
+                <td className="p-3 text-xs">
+                  {t.to ? (
+                    <>
+                      <AddressLink addr={t.to} />
+                      {t.contractName && t.functionName && (
+                        <div className="mt-1 inline-block bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-mono">
+                          {t.contractName}.{t.functionName}()
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <span className="italic text-purple-600">
+                      Contract Creation
+                    </span>
+                  )}
+                </td>
+                <td className="p-3 text-right font-mono whitespace-nowrap">
+                  <ValueCell ethWei={t.value} ethStr={t.valueEth} tvtWei={tvtAmount} />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// Smart Value cell: TVT priority kalau ada, fallback ke ETH, fallback ke "—"
+function ValueCell({
+  ethWei,
+  ethStr,
+  tvtWei,
+}: Readonly<{
+  ethWei: bigint;
+  ethStr: string;
+  tvtWei: bigint | undefined;
+}>) {
+  if (tvtWei && tvtWei > 0n) {
+    return (
+      <div>
+        <span className="font-semibold text-emerald-700">
+          {Number(formatTVT(tvtWei)).toLocaleString("id-ID", {
+            maximumFractionDigits: 4,
+          })}
+        </span>{" "}
+        <span className="text-xs text-emerald-600">TVT</span>
+        {ethWei > 0n && (
+          <div className="text-xs text-slate-400">
+            + {Number(ethStr).toFixed(4)} ETH
+          </div>
+        )}
+      </div>
+    );
+  }
+  if (ethWei > 0n) {
+    return (
+      <div>
+        <span className="font-semibold text-blue-700">
+          {Number(ethStr).toLocaleString("id-ID", {
+            maximumFractionDigits: 4,
+          })}
+        </span>{" "}
+        <span className="text-xs text-blue-600">ETH</span>
+      </div>
+    );
+  }
+  return <span className="text-slate-300">—</span>;
 }

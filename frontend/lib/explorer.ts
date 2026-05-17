@@ -481,6 +481,123 @@ export async function getAddressInfo(addr: string): Promise<AddressInfo> {
 }
 
 // =====================================================================
+// Recent Transactions (semua tx di network, bukan cuma TVT transfer)
+// =====================================================================
+
+export type TxKind =
+  | "Contract Creation"
+  | "Contract Call"
+  | "ETH Transfer"
+  | "Empty";
+
+export type RecentTx = {
+  hash: string;
+  blockNumber: number;
+  blockIndex: number;
+  timestamp: number;
+  from: string;
+  to: string | null;
+  value: bigint;
+  valueEth: string;
+  nonce: number;
+  kind: TxKind;
+  contractName: string | null; // e.g. "TouristPass", "DestinationBadge", "RewardToken"
+  functionName: string | null; // e.g. "mintPass", "mintBadge"
+};
+
+function tryDecodeFunctionCall(
+  to: string,
+  data: string
+): { contractName: string; functionName: string } | null {
+  const known = getInterfaceFor(to);
+  if (!known) return null;
+  try {
+    const parsed = known.iface.parseTransaction({ data });
+    if (!parsed) return null;
+    return { contractName: known.name, functionName: parsed.name };
+  } catch {
+    return null;
+  }
+}
+
+function classifyTx(t: ethers.TransactionResponse): {
+  kind: TxKind;
+  contractName: string | null;
+  functionName: string | null;
+} {
+  if (t.to == null) {
+    return { kind: "Contract Creation", contractName: null, functionName: null };
+  }
+  const hasData = t.data && t.data !== "0x" && t.data.length > 2;
+  if (hasData) {
+    const decoded = tryDecodeFunctionCall(t.to, t.data);
+    return {
+      kind: "Contract Call",
+      contractName: decoded?.contractName ?? null,
+      functionName: decoded?.functionName ?? null,
+    };
+  }
+  const kind: TxKind = t.value > 0n ? "ETH Transfer" : "Empty";
+  return { kind, contractName: null, functionName: null };
+}
+
+function blockTxToRecord(
+  t: ethers.TransactionResponse,
+  blockNumber: number,
+  blockTimestamp: number,
+  blockIndex: number
+): RecentTx {
+  const classification = classifyTx(t);
+  return {
+    hash: t.hash,
+    blockNumber,
+    blockIndex,
+    timestamp: blockTimestamp,
+    from: t.from,
+    to: t.to,
+    value: t.value,
+    valueEth: ethers.formatEther(t.value),
+    nonce: t.nonce,
+    ...classification,
+  };
+}
+
+/**
+ * Ambil semua tx terbaru dari blockchain (across all blocks).
+ * Iterate dari block terbaru ke bawah sampai limit tercapai.
+ */
+export async function getRecentTransactions(
+  limit = 30
+): Promise<RecentTx[]> {
+  const provider = getProvider();
+  const latestBlock = await provider.getBlockNumber();
+
+  const txs: RecentTx[] = [];
+  const maxBlocksToScan = 500;
+  let blockNum = latestBlock;
+  let scannedBlocks = 0;
+
+  while (txs.length < limit && blockNum >= 0 && scannedBlocks < maxBlocksToScan) {
+    scannedBlocks++;
+    const block = await provider.getBlock(blockNum, true);
+    blockNum--;
+    if (!block) continue;
+
+    // Di ethers v6, block.transactions hanya berisi hash strings.
+    // Yang full TransactionResponse ada di block.prefetchedTransactions
+    // (terisi karena kita pass prefetchTxs=true ke getBlock).
+    const prefetched = block.prefetchedTransactions;
+    if (prefetched.length === 0) continue;
+
+    for (let i = prefetched.length - 1; i >= 0 && txs.length < limit; i--) {
+      txs.push(blockTxToRecord(prefetched[i], block.number, block.timestamp, i));
+    }
+  }
+
+  return txs;
+}
+
+// =====================================================================
 // Check-in Feed (BadgeMinted events — public, all users)
 // =====================================================================
 

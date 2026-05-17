@@ -8,11 +8,13 @@
 
 <br/>
 
-![Status](https://img.shields.io/badge/status-in--development-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-working-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
-![Network](https://img.shields.io/badge/network-Polygon%20Amoy-8247E5?style=for-the-badge&logo=polygon)
-![Solidity](https://img.shields.io/badge/solidity-0.8.20-363636?style=for-the-badge&logo=solidity)
+![Network](https://img.shields.io/badge/network-Hardhat%20Local-FFF100?style=for-the-badge)
+![Network](https://img.shields.io/badge/optional-Polygon%20Amoy-8247E5?style=for-the-badge&logo=polygon)
+![Solidity](https://img.shields.io/badge/solidity-0.8.28-363636?style=for-the-badge&logo=solidity)
 ![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=next.js)
+![Express](https://img.shields.io/badge/Express-4.21-000000?style=for-the-badge&logo=express)
 
 <br/>
 
@@ -34,9 +36,9 @@
   </tr>
   <tr>
     <td><b>📅 Date</b></td>
-    <td>2026-05-14</td>
+    <td>2026-05-18</td>
     <td><b>📊 Status</b></td>
-    <td><code>DRAFT</code></td>
+    <td><code>WORKING — Hardhat Local</code></td>
   </tr>
   <tr>
     <td><b>🔖 Classification</b></td>
@@ -84,7 +86,51 @@
 
 ---
 
-## 📋 Table of Contents
+## 📚 Documentation Hub
+
+> 🎯 **Pemula? Mulai dari sini:** [GETTING_STARTED.md](docs/GETTING_STARTED.md) — setup lengkap dari nol sampai jalan.
+
+<table>
+<tr>
+<th align="left">📄 Dokumen</th>
+<th align="left">Untuk Siapa</th>
+<th align="left">Isi</th>
+</tr>
+<tr>
+<td><a href="docs/GETTING_STARTED.md"><b>🚀 GETTING_STARTED</b></a></td>
+<td>Pemula / Tester</td>
+<td>Setup 4-terminal, install, deploy, MetaMask config, demo flow, troubleshooting</td>
+</tr>
+<tr>
+<td><a href="docs/USER_FLOW.md"><b>🛣️ USER_FLOW</b></a></td>
+<td>Dosen / Demo viewer</td>
+<td>10 flow end-to-end: login, mint, check-in, level up. Includes mermaid sequence diagrams.</td>
+</tr>
+<tr>
+<td><a href="docs/SMART_CONTRACTS.md"><b>📜 SMART_CONTRACTS</b></a></td>
+<td>SC Developer</td>
+<td>Spec 3 contract (ERC-721 × 2, ERC-20), functions, events, deploy guide</td>
+</tr>
+<tr>
+<td><a href="docs/BACKEND.md"><b>🌐 BACKEND</b></a></td>
+<td>Backend Developer / FE integrator</td>
+<td>11 endpoint REST API, auth flow SIWE, error codes, integration snippets</td>
+</tr>
+<tr>
+<td><a href="docs/FRONTEND.md"><b>🎨 FRONTEND</b></a></td>
+<td>FE Styling Team</td>
+<td>Next.js structure, 9 pages, hooks, contexts, styling priority</td>
+</tr>
+<tr>
+<td><a href="docs/SIMULATION_FLOW.md"><b>🧪 SIMULATION_FLOW</b></a></td>
+<td>Tester / API Reviewer</td>
+<td>Postman collection, cURL examples, bash test script untuk auto-test</td>
+</tr>
+</table>
+
+---
+
+## 📋 Table of Contents (README ini)
 
 <table>
 <tr>
@@ -115,6 +161,34 @@
 </td>
 </tr>
 </table>
+
+---
+
+## 🚀 Quick Start (60 detik)
+
+```bash
+# 1. Clone & install (3 folder)
+git clone https://github.com/ChrozaGaming/TravelVersePass-Blockchain.git
+cd TravelVersePass-Blockchain
+npm install && cd backend && npm install && cd ../frontend && npm install && cd ..
+
+# 2. Compile contracts
+npm run compile
+
+# 3. Start 4 terminal (urut):
+# T1: npx hardhat node                              (port 8545)
+# T2: npm run deploy:local                          (deploy 3 contract)
+# T3: cd backend && npm run dev                     (port 4000)
+# T4: cd frontend && npm run dev                    (port 3000)
+
+# 4. Setup MetaMask:
+# - Add network Hardhat Localhost (chainId 31337, RPC http://localhost:8545)
+# - Import account #1 (PK: 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d)
+
+# 5. Buka http://localhost:3000 → Login → Mint Pass → Scan QR → Enjoy
+```
+
+**⚠️ Detail lengkap + env setup + Supabase setup ada di [GETTING_STARTED.md](docs/GETTING_STARTED.md).**
 
 ---
 
@@ -175,38 +249,43 @@ Sistem level, badge, dan reward token meningkatkan engagement wisatawan.
 </tr>
 <tr>
 <td align="center"><b>Frontend</b></td>
-<td align="center">Next.js 14 · Tailwind CSS · shadcn/ui</td>
-<td>Full-stack framework dengan App Router & API Routes built-in</td>
+<td align="center">Next.js 14 · TypeScript · Tailwind CSS</td>
+<td>App Router, SSR/CSR hybrid, Tailwind utility-first styling</td>
+</tr>
+<tr>
+<td align="center"><b>Backend API</b></td>
+<td align="center">Node.js 18+ · Express 4.21 · ethers.js v6</td>
+<td>REST API, orchestrate on-chain calls, SIWE auth + JWT</td>
 </tr>
 <tr>
 <td align="center"><b>Smart Contract</b></td>
-<td align="center">Solidity 0.8.20 · Hardhat · OpenZeppelin</td>
-<td>Ekosistem paling matang dengan dokumentasi terbaik</td>
+<td align="center">Solidity 0.8.28 · Hardhat · OpenZeppelin v5</td>
+<td>EVM cancun support, ecosystem paling matang</td>
 </tr>
 <tr>
 <td align="center"><b>Wallet Layer</b></td>
 <td align="center">ethers.js v6 · MetaMask</td>
-<td>Library interaksi blockchain yang ringan dan modern</td>
+<td>Library interaksi blockchain modern dengan NonceManager</td>
 </tr>
 <tr>
-<td align="center"><b>Network</b></td>
-<td align="center">Polygon Amoy Testnet</td>
-<td>Gas fee gratis, fast finality, ideal untuk demo akademik</td>
+<td align="center"><b>Network (Default)</b></td>
+<td align="center">🟢 <b>Hardhat Localhost</b> (chainId 31337)</td>
+<td>Zero gas, instant tx, 20 akun pre-funded 10000 ETH — ideal untuk demo</td>
 </tr>
 <tr>
-<td align="center"><b>Storage</b></td>
-<td align="center">Pinata (IPFS)</td>
-<td>Decentralized storage dengan free tier yang generous</td>
-</tr>
-<tr>
-<td align="center"><b>Backend</b></td>
-<td align="center">Next.js API Routes</td>
-<td>Tidak perlu server terpisah, deploy serverless</td>
+<td align="center"><b>Network (Optional)</b></td>
+<td align="center">Polygon Amoy Testnet (chainId 80002)</td>
+<td>Public testnet — butuh MATIC dari faucet</td>
 </tr>
 <tr>
 <td align="center"><b>Database</b></td>
 <td align="center">Supabase (PostgreSQL)</td>
-<td>Setup 5 menit, auth built-in, free tier memadai</td>
+<td>Setup 5 menit, free tier untuk master data destinasi + visit history</td>
+</tr>
+<tr>
+<td align="center"><b>QR Auth</b></td>
+<td align="center">HMAC-SHA256 + JWT (HS256)</td>
+<td>Anti-tampering QR token (TTL 15 min) + session JWT (7 hari) |
 </tr>
 </table>
 
@@ -226,46 +305,68 @@ Sistem level, badge, dan reward token meningkatkan engagement wisatawan.
 ### 3.1 Struktur Direktori
 
 ```
-📦 travelverse/
+📦 travelversepass-blockchain/
 │
-├── 📂 contracts/                    # 🔗 Smart Contracts (Solidity)
-│   ├── 📜 TouristPass.sol           # ERC-721: identitas wisata digital
-│   ├── 📜 DestinationBadge.sol      # ERC-721: badge NFT per destinasi
-│   └── 📜 RewardToken.sol           # ERC-20: token loyalty
+├── 📂 contracts/                       # 🔗 Smart Contracts (Solidity 0.8.28)
+│   ├── 📜 TouristPass.sol              # ERC-721: identitas wisata digital
+│   ├── 📜 DestinationBadge.sol         # ERC-721: badge NFT per destinasi
+│   └── 📜 RewardToken.sol              # ERC-20: token loyalty TVT
 │
-├── 📂 scripts/                      # ⚙️  Hardhat scripts
-│   └── 📄 deploy.js                 # Deploy semua contract sekaligus
+├── 📂 scripts/                         # ⚙️  Hardhat scripts
+│   └── 📄 deploy.js                    # Deploy 3 contract + save deployments.json
 │
-├── 📂 test/                         # 🧪 Unit test contract
-│   └── 📄 TravelVerse.test.js
+├── 📂 test/                            # 🧪 Unit test contract (Chai + Hardhat)
+│   ├── 📄 TouristPass.test.js          # 18 test cases
+│   ├── 📄 DestinationBadge.test.js     # 13 test cases
+│   └── 📄 RewardToken.test.js          # 13 test cases
 │
-├── 📂 frontend/                     # 🎨 Next.js Application
+├── 📂 backend/                         # 🌐 Express + Node.js REST API
+│   ├── 📂 src/
+│   │   ├── 📄 server.js                # Express entry, CORS + rate limit
+│   │   ├── 📄 config.js                # Env validation (chainId flexible)
+│   │   ├── 📂 routes/                  # auth · destinations · qr · checkin · me
+│   │   ├── 📂 services/                # blockchain · qr · jwt · nonce · supabase
+│   │   ├── 📂 middleware/              # JWT auth · centralized error handler
+│   │   └── 📂 lib/                     # ABI loader · Zod validators
+│   ├── 📂 db/                          # 🗄️  Supabase SQL
+│   │   ├── 📄 schema.sql               # destinations + visits tables + RLS
+│   │   ├── 📄 seed.sql                 # 8 destinasi Indonesia
+│   │   └── 📄 update_images.sql        # Update image URLs
+│   ├── 📂 tests/                       # Unit tests (node --test)
+│   ├── 📄 package.json
+│   └── 📄 .env.example
+│
+├── 📂 frontend/                        # 🎨 Next.js 14 (App Router + TypeScript)
 │   ├── 📂 app/
-│   │   ├── 📄 page.tsx              # 🏠 Landing page
-│   │   ├── 📂 dashboard/
-│   │   │   └── 📄 page.tsx          # 📊 Traveler dashboard
-│   │   ├── 📂 destinations/
-│   │   │   └── 📄 page.tsx          # 🗺️  List destinasi wisata
-│   │   ├── 📂 scan/
-│   │   │   └── 📄 page.tsx          # 📷 QR scanner page
-│   │   └── 📂 api/
-│   │       ├── 📄 qr/route.ts       # Generate & verifikasi QR
-│   │       └── 📄 verify/route.ts   # Verifikasi kunjungan
-│   │
-│   ├── 📂 components/
-│   │   ├── 🧩 WalletConnect.tsx     # Connect MetaMask button
-│   │   ├── 🧩 NFTBadgeCard.tsx      # NFT badge card display
-│   │   ├── 🧩 LevelProgress.tsx     # Traveler level progress bar
-│   │   └── 🧩 JourneyTimeline.tsx   # Travel journey timeline
-│   │
-│   └── 📂 lib/
-│       ├── 📄 contracts.ts          # ABI + contract address
-│       ├── 📄 supabase.ts           # Supabase client
-│       └── 📄 ethers.ts             # Ethers.js helper
+│   │   ├── 📄 layout.tsx               # AuthProvider + UserMenu header
+│   │   ├── 📄 page.tsx                 # 🏠 Landing
+│   │   ├── 📂 login/                   # 🦊 Wallet sign-in (SIWE)
+│   │   ├── 📂 mint-pass/               # 🪪 Mint Tourist Pass (direct contract)
+│   │   ├── 📂 dashboard/               # 📊 Profile + level + balance
+│   │   ├── 📂 destinations/            # 🗺️  List + detail + QR display
+│   │   ├── 📂 scan/                    # 📷 QR scanner + check-in result
+│   │   ├── 📂 badges/                  # 🏅 NFT collection
+│   │   └── 📂 timeline/                # 📅 Journey timeline grouped by year
+│   ├── 📂 components/                  # WalletConnect · UserMenu · QRScanner · dll
+│   ├── 📂 contexts/AuthContext.tsx     # Global wallet + JWT state
+│   ├── 📂 lib/                         # api · auth · wallet · contracts · types
+│   └── 📄 .env.local                   # NEXT_PUBLIC_* config
 │
-├── ⚙️  hardhat.config.js            # Konfigurasi Hardhat + Polygon Amoy
-├── 🔐 .env                          # API keys (NEVER COMMIT!)
-└── 📖 README.md                     # Dokumentasi proyek ini
+├── 📂 docs/                            # 📚 Dokumentasi lengkap
+│   ├── 📖 GETTING_STARTED.md           # 🚀 Setup pemula (15 sections)
+│   ├── 📖 USER_FLOW.md                 # 🛣️  End-to-end user journey
+│   ├── 📖 SMART_CONTRACTS.md           # 📜 SC spec + handover
+│   ├── 📖 BACKEND.md                   # 🌐 REST API reference
+│   ├── 📖 FRONTEND.md                  # 🎨 Next.js structure
+│   └── 📖 SIMULATION_FLOW.md           # 🧪 Postman/cURL guide
+│
+├── 📂 deployments/                     # ⛓️  Auto-saved address (per network)
+│   └── 📄 localhost.json               # Address Hardhat local (deterministic)
+│
+├── ⚙️  hardhat.config.js               # Solidity 0.8.28 cancun, Amoy + localhost
+├── 🔐 .env                             # PRIVATE_KEY, contract addresses (gitignored)
+├── 📄 package.json                     # Root: hardhat + deps
+└── 📖 README.md                        # File ini (documentation hub)
 ```
 
 ### 3.2 High-Level Flow
@@ -531,6 +632,9 @@ contract RewardToken is ERC20, Ownable {
 
 ## 6. Environment Setup
 
+> 📘 **Detail lengkap step-by-step ada di [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md).**
+> Section ini hanya rangkuman cepat. Default mode: **Hardhat Local** (zero gas, instant tx).
+
 ### 6.1 Prerequisites
 
 | Tool | Min. Version | Verifikasi |
@@ -539,85 +643,119 @@ contract RewardToken is ERC20, Ownable {
 | 📦 npm | `≥ 9.x` | `npm --version` |
 | 🦊 MetaMask | Latest | Browser extension installed |
 | 💼 Git | `≥ 2.x` | `git --version` |
+| 🗄️ Supabase | Free tier | https://supabase.com (signup) |
 
-### 6.2 Setup Hardhat
-
-```bash
-mkdir travelverse && cd travelverse
-npm init -y
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
-npx hardhat init
-# ✅ Pilih: Create a JavaScript project
-
-npm install @openzeppelin/contracts
-```
-
-### 6.3 Setup Next.js Frontend
+### 6.2 Install Dependencies (3 folder)
 
 ```bash
-npx create-next-app@latest frontend
-# ✅ TypeScript    | ✅ Tailwind CSS
-# ✅ App Router   | ✅ ESLint
+# Root (smart contracts + Hardhat)
+npm install
 
-cd frontend
-npm install ethers @supabase/supabase-js
-npm install react-qr-reader qrcode
-npm install @shadcn/ui
+# Backend (Express API)
+cd backend && npm install && cd ..
+
+# Frontend (Next.js)
+cd frontend && npm install && cd ..
 ```
 
-### 6.4 Konfigurasi `hardhat.config.js`
+### 6.3 Compile & Deploy ke Hardhat Localhost
 
-```javascript
-require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
+```bash
+# Terminal 1: Start local blockchain (port 8545)
+npx hardhat node
 
-module.exports = {
-  solidity: "0.8.20",
-  networks: {
-    amoy: {
-      url: "https://rpc-amoy.polygon.technology/",
-      accounts: [process.env.PRIVATE_KEY],
-      chainId: 80002,
-    },
-  },
-};
+# Terminal 2: Compile + deploy (address deterministic, selalu sama)
+npm run compile
+npm run deploy:local
 ```
 
-### 6.5 Environment Variables (`.env`)
+Output:
+```
+TouristPass:       0x5FbDB2315678afecb367f032d93F642f64180aa3
+DestinationBadge:  0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+RewardToken:       0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+```
 
-> ⚠️ **PERINGATAN:** Jangan pernah commit file `.env` ke repository publik!
+Address ini **selalu sama** di Hardhat Local (deterministic dari Account #0 nonce). Auto-saved di `deployments/localhost.json`.
 
+### 6.4 Environment Variables (3 file)
+
+> ⚠️ **PERINGATAN:** Jangan pernah commit file `.env*` ke repository publik!
+
+**Root `.env`** — untuk Hardhat deploy:
 ```env
-# 🔐 Wallet & Blockchain
-PRIVATE_KEY=your_metamask_private_key_here
-
-# 🗄️  Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# 📜 Deployed Contract Addresses
-NEXT_PUBLIC_TOURIST_PASS_ADDRESS=deployed_contract_address
-NEXT_PUBLIC_BADGE_ADDRESS=deployed_contract_address
-NEXT_PUBLIC_TOKEN_ADDRESS=deployed_contract_address
-
-# 🔒 QR Security
-QR_SECRET=your_random_secret_for_qr_signing
+PRIVATE_KEY=ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+# Address dari deployments/localhost.json
+TOURIST_PASS_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+BADGE_ADDRESS=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+TOKEN_ADDRESS=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 ```
 
-### 6.6 Deploy Contracts
-
-```bash
-npx hardhat run scripts/deploy.js --network amoy
+**`backend/.env`** — untuk API:
+```env
+PORT=4000
+RPC_URL=http://127.0.0.1:8545
+CHAIN_ID=31337
+OWNER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+TOURIST_PASS_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+BADGE_ADDRESS=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+TOKEN_ADDRESS=0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+JWT_SECRET=<openssl rand -hex 32>
+QR_SECRET=<openssl rand -hex 32>
+SUPABASE_URL=https://xxxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<secret_key_supabase>
 ```
 
-### 6.7 Acquiring Test MATIC
+**`frontend/.env.local`** — untuk Next.js:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:4000
+NEXT_PUBLIC_TOURIST_PASS_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+NEXT_PUBLIC_CHAIN_ID=31337
+NEXT_PUBLIC_CHAIN_NAME=Hardhat Localhost
+NEXT_PUBLIC_CHAIN_RPC=http://127.0.0.1:8545
+NEXT_PUBLIC_BLOCK_EXPLORER=
+```
 
-| Step | Action |
-|:---:|:---|
-| **1️⃣** | Buka [Polygon Faucet](https://faucet.polygon.technology/) |
-| **2️⃣** | Pilih **Amoy Testnet** |
-| **3️⃣** | Paste wallet address |
-| **4️⃣** | Klaim **MATIC** gratis untuk gas fee |
+### 6.5 Setup Supabase Database
+
+Buat project Supabase → SQL Editor → jalankan:
+1. [backend/db/schema.sql](backend/db/schema.sql) (tables + RLS)
+2. [backend/db/seed.sql](backend/db/seed.sql) (8 destinasi)
+
+Detail di [docs/GETTING_STARTED.md Section 8](docs/GETTING_STARTED.md).
+
+### 6.6 Setup MetaMask (Sekali)
+
+**Add Network manually:**
+
+| Field | Value |
+|:---|:---|
+| Network name | Hardhat Localhost |
+| RPC URL | `http://localhost:8545` |
+| Chain ID | `31337` |
+| Currency | ETH |
+
+**Import Test Account #1** (10000 ETH pre-funded):
+```
+Private Key: 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+Address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+```
+
+⚠️ Account #0 (`0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`) dipakai backend sebagai owner — **jangan di-import ke MetaMask**.
+
+### 6.7 Pindah ke Polygon Amoy Testnet (Optional)
+
+Kalau mau pindah dari Hardhat Local ke testnet asli (Polygon Amoy):
+
+1. Update `backend/.env` & `frontend/.env.local`:
+   - `RPC_URL=https://rpc-amoy.polygon.technology/`
+   - `CHAIN_ID=80002`
+   - `NEXT_PUBLIC_BLOCK_EXPLORER=https://amoy.polygonscan.com`
+2. Claim MATIC dari [Polygon Faucet](https://faucet.polygon.technology/)
+3. Deploy: `npm run deploy:amoy` (butuh ~2 MATIC untuk 3 contract)
+4. Update address di semua file `.env`
+
+Detail di [docs/GETTING_STARTED.md FAQ Q2](docs/GETTING_STARTED.md#15-faq).
 
 ---
 
@@ -782,10 +920,11 @@ link ke Polygonscan untuk lihat transaksi NFT-nya.
 
 #### ⚠️ Security Warnings
 
-1. **Jangan commit `.env`** — tambahkan ke `.gitignore` dari awal
-2. **Jangan pakai mainnet** — gunakan testnet Amoy untuk demo
-3. **Backup private key** wallet di tempat aman
-4. **Simpan deployed address** — dibutuhkan di frontend
+1. **Jangan commit `.env`** — sudah di `.gitignore`, verify sebelum push
+2. **Jangan pakai mainnet** — Hardhat Local atau testnet Amoy aja
+3. **Hardhat default private key publik** — well-known, **JANGAN pakai untuk wallet mainnet sungguhan**
+4. **Backup private key** wallet asli di tempat aman
+5. **Jangan share JWT_SECRET/QR_SECRET** — generate ulang `openssl rand -hex 32` kalau bocor
 
 </td>
 <td width="50%" valign="top">
@@ -828,13 +967,16 @@ link ke Polygonscan untuk lihat transaksi NFT-nya.
 
 | 🔗 Resource | 🌐 URL |
 |:---|:---|
-| 🛡️ OpenZeppelin Contracts | https://docs.openzeppelin.com/contracts |
-| ⚒️  Hardhat Documentation | https://hardhat.org/docs |
-| 💧 Polygon Amoy Faucet | https://faucet.polygon.technology |
-| 📌 Pinata (IPFS) | https://www.pinata.cloud |
-| 🗄️  Supabase Documentation | https://supabase.com/docs |
+| 🛡️ OpenZeppelin Contracts | https://docs.openzeppelin.com/contracts/5.x |
+| ⚒️ Hardhat Documentation | https://hardhat.org/docs |
+| 🛠️ Hardhat Network (local) | https://hardhat.org/hardhat-network/docs/overview |
 | 📚 ethers.js v6 Docs | https://docs.ethers.org/v6 |
-| 🔍 Polygonscan (Amoy) | https://amoy.polygonscan.com |
+| 🗄️ Supabase Documentation | https://supabase.com/docs |
+| 🦊 MetaMask Docs | https://docs.metamask.io |
+| 🌐 Next.js 14 (App Router) | https://nextjs.org/docs |
+| 🔐 Express.js Docs | https://expressjs.com/en/4x/api.html |
+| 💧 Polygon Amoy Faucet (optional) | https://faucet.polygon.technology |
+| 🔍 Polygonscan Amoy (optional) | https://amoy.polygonscan.com |
 
 ---
 

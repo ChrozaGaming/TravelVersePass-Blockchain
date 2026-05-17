@@ -761,7 +761,7 @@ Detail di [docs/GETTING_STARTED.md FAQ Q2](docs/GETTING_STARTED.md#15-faq).
 
 ## 7. Vibe Coding Prompts
 
-> 💡 Template prompt siap pakai untuk AI assistant (Claude / ChatGPT / Cursor).
+> 💡 Template prompt siap pakai untuk AI assistant favorit (ChatGPT / Cursor / Copilot).
 
 <details>
 <summary>📝 <b>7.1 — Smart Contract Generation</b></summary>

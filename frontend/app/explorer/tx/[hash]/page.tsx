@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import gsap from "gsap";
 import {
   type ExplorerDestination,
   type TxDetail,
@@ -13,6 +14,23 @@ import {
   relativeTime,
   shortAddr,
 } from "@/lib/explorer";
+import {
+  ArrowLeft,
+  Activity,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Box,
+  Zap,
+  Database,
+  Terminal,
+  MapPin,
+  ExternalLink,
+  Code2,
+  Hash,
+  Map,
+  AlertCircle,
+} from "lucide-react";
 
 export default function TxDetailPage() {
   const params = useParams<{ hash: string }>();
@@ -20,10 +38,11 @@ export default function TxDetailPage() {
 
   const [tx, setTx] = useState<TxDetail | null>(null);
   const [destination, setDestination] = useState<ExplorerDestination | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!hash) return;
@@ -35,10 +54,7 @@ export default function TxDetailPage() {
         }
         setTx(res);
 
-        // Cek apakah tx ini punya BadgeMinted event → enrich dengan destination
-        const badgeLog = res.logs.find(
-          (l) => l.eventName === "BadgeMinted"
-        );
+        const badgeLog = res.logs.find((l) => l.eventName === "BadgeMinted");
         if (badgeLog) {
           const destId = Number.parseInt(badgeLog.args.destinationId, 10);
           if (!Number.isNaN(destId)) {
@@ -48,250 +64,364 @@ export default function TxDetailPage() {
         }
       })
       .catch((err) =>
-        setError(err instanceof Error ? err.message : "Failed to load")
+        setError(err instanceof Error ? err.message : "Failed to load"),
       )
       .finally(() => setLoading(false));
   }, [hash]);
 
+  useEffect(() => {
+    if (!loading && tx && containerRef.current) {
+      const ctx = gsap.context(() => {
+        gsap.to(".gsap-reveal", {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power4.out",
+        });
+      }, containerRef);
+      return () => ctx.revert();
+    }
+  }, [loading, tx]);
+
   if (loading) {
     return (
-      <div className="container-page">
-        <p className="text-slate-500">Memuat transaksi...</p>
-      </div>
-    );
-  }
-  if (error || !tx) {
-    return (
-      <div className="container-page max-w-2xl">
-        <div className="alert-error" role="alert">
-          {error || "Transaction not found"}
+      <div className="w-full min-h-[60vh] flex flex-col items-center justify-center gap-4 relative z-10">
+        <div className="relative w-16 h-16 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full border-t-2 border-cyan-500 animate-spin" />
+          <Hash className="w-6 h-6 text-cyan-500/40" />
         </div>
-        <Link href="/explorer" className="text-blue-600 hover:underline mt-4 inline-block">
-          ← Back to Explorer
-        </Link>
+        <p className="text-slate-400 font-mono text-sm tracking-widest uppercase animate-pulse">
+          Indexing Transaction...
+        </p>
       </div>
     );
   }
 
-  const statusColor = {
-    success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    failed: "bg-red-50 text-red-700 border-red-200",
-    pending: "bg-amber-50 text-amber-700 border-amber-200",
+  if (error || !tx) {
+    return (
+      <div className="w-full max-w-3xl mx-auto mt-20 relative z-10 px-4 sm:px-6">
+        <div className="bg-rose-500/10 border border-rose-500/20 backdrop-blur-xl rounded-[2rem] p-8 flex flex-col items-center text-center">
+          <AlertCircle className="w-12 h-12 text-rose-400 mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-2">Query Failed</h2>
+          <p className="text-slate-400 font-mono text-sm mb-6">
+            {error || "Transaction not found on the ledger"}
+          </p>
+          <Link
+            href="/explorer"
+            className="px-6 py-3 bg-white/[0.05] hover:bg-white/[0.1] text-white rounded-xl border border-white/[0.1] transition-colors flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Explorer
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const statusStyle = {
+    success: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+    failed: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+    pending: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+  }[tx.status];
+
+  const statusIcon = {
+    success: <CheckCircle2 className="w-3.5 h-3.5" />,
+    failed: <XCircle className="w-3.5 h-3.5" />,
+    pending: <Clock className="w-3.5 h-3.5" />,
   }[tx.status];
 
   return (
-    <div className="container-page max-w-4xl">
-      <div className="mb-4">
-        <Link href="/explorer" className="text-sm text-blue-600 hover:underline">
-          ← Back to Explorer
+    <div
+      ref={containerRef}
+      className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-32 relative z-10 font-sans"
+    >
+      {/* Background Glows */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Navigation */}
+      <div className="gsap-reveal opacity-0 translate-y-4 mb-8">
+        <Link
+          href="/explorer"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors bg-white/[0.02] hover:bg-cyan-500/10 px-4 py-2 rounded-full border border-white/[0.05] hover:border-cyan-500/30"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Explorer
         </Link>
       </div>
 
-      <h1 className="section-title break-all">Transaction</h1>
-      <p className="font-mono text-xs sm:text-sm text-slate-600 break-all mb-6">
-        {tx.hash}
-      </p>
+      {/* Header */}
+      <div className="gsap-reveal opacity-0 translate-y-4 mb-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-bold tracking-wide mb-4">
+          <Hash className="w-3.5 h-3.5" />
+          TRANSACTION DETAILS
+        </div>
+        <h1 className="text-3xl font-black text-white tracking-tight mb-3 break-all leading-tight">
+          {tx.hash}
+        </h1>
+      </div>
 
-      {/* Destination Context — hanya muncul kalau tx ini check-in */}
+      {/* Destination Context (if check-in) */}
       {destination && (
-        <div className="card mb-4 border-emerald-200 bg-emerald-50">
-          <div className="flex flex-col sm:flex-row gap-4">
+        <div className="gsap-reveal opacity-0 translate-y-8 bg-gradient-to-r from-emerald-500/10 to-teal-500/5 backdrop-blur-xl border border-emerald-500/20 rounded-[2rem] p-5 mb-6 flex flex-col sm:flex-row gap-5 items-center relative overflow-hidden group">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-500 pointer-events-none" />
+
+          <div className="w-full sm:w-32 h-32 shrink-0 rounded-xl overflow-hidden bg-[#030308] border border-emerald-500/20 relative z-10">
             {destination.image_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={destination.image_url}
                 alt={destination.name}
-                className="w-full sm:w-32 h-32 object-cover rounded-md bg-emerald-100"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full sm:w-32 h-32 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-md flex items-center justify-center text-4xl shrink-0">
-                📍
+              <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-[#0a0b18] to-emerald-900/20">
+                <Map className="w-10 h-10 text-emerald-500/50" />
               </div>
             )}
-            <div className="flex-1">
-              <div className="inline-block bg-emerald-600 text-white text-xs font-semibold px-2 py-1 rounded mb-2">
-                🏅 Check-in Transaction
-              </div>
-              <h2 className="text-xl font-bold text-emerald-900 mb-1">
-                {destination.name}
-              </h2>
-              <p className="text-sm text-emerald-800 mb-2">
-                {destination.description}
-              </p>
-              <p className="text-xs text-emerald-700 mb-2">
-                📍 {destination.location_lat}, {destination.location_lng}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href={`/explorer/destinations/${destination.id}`}
-                  className="text-xs text-emerald-700 hover:underline font-medium"
-                >
-                  Lihat semua check-in di destinasi ini →
-                </Link>
-                <a
-                  href={`https://www.google.com/maps?q=${destination.location_lat},${destination.location_lng}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-emerald-700 hover:underline font-medium"
-                >
-                  📍 Google Maps →
-                </a>
-              </div>
+          </div>
+
+          <div className="flex-1 min-w-0 w-full relative z-10">
+            <div className="inline-flex items-center gap-1.5 bg-emerald-500 text-slate-950 text-[10px] font-black tracking-widest uppercase px-2.5 py-1 rounded-md mb-3">
+              <CheckCircle2 className="w-3 h-3" /> Check-in Verified
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-1 truncate">
+              {destination.name}
+            </h2>
+            <p className="text-sm text-emerald-200/70 mb-4 line-clamp-1">
+              {destination.description}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href={`/explorer/destinations/${destination.id}`}
+                className="text-xs font-mono text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1"
+              >
+                <Database className="w-3.5 h-3.5" /> View Analytics
+              </Link>
+              <a
+                href={`https://www.google.com/maps?q=${destination.location_lat},${destination.location_lng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-mono text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1"
+              >
+                <MapPin className="w-3.5 h-3.5" /> Google Maps
+              </a>
             </div>
           </div>
         </div>
       )}
 
-      <div className="card mb-4">
-        <h2 className="text-lg font-semibold text-slate-900 mb-3">Overview</h2>
+      {/* Main Details Grid */}
+      <div className="gsap-reveal opacity-0 translate-y-8 bg-[#0a0b18]/80 backdrop-blur-xl border border-white/[0.08] rounded-[2rem] p-6 sm:p-8 mb-6 shadow-xl">
+        <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-6">
+          <Activity className="w-5 h-5 text-cyan-400" /> Overview
+        </h2>
         <DetailGrid>
-          <DetailRow label="Status">
-            <span className={`inline-block px-2 py-1 rounded text-xs font-semibold border ${statusColor}`}>
-              {tx.status === "success" && "✓ Success"}
-              {tx.status === "failed" && "✗ Failed"}
-              {tx.status === "pending" && "⏳ Pending"}
+          <DetailRow label="Transaction Status">
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border ${statusStyle}`}
+            >
+              {statusIcon} {tx.status}
             </span>
           </DetailRow>
-          <DetailRow label="Block">
-            <Link
-              href={`/explorer/block/${tx.blockNumber}`}
-              className="text-blue-600 hover:underline font-mono"
-            >
-              #{tx.blockNumber}
-            </Link>
+          <DetailRow label="Block Number">
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/explorer/block/${tx.blockNumber}`}
+                className="text-cyan-400 hover:underline font-mono flex items-center gap-1"
+              >
+                <Box className="w-3.5 h-3.5" /> {tx.blockNumber}
+              </Link>
+              <span className="text-[10px] bg-white/[0.05] border border-white/10 px-2 py-0.5 rounded text-slate-400">
+                Idx: {tx.index}
+              </span>
+            </div>
           </DetailRow>
           <DetailRow label="Timestamp">
             {tx.timestamp ? (
-              <>
-                <span>{formatTimestamp(tx.timestamp)}</span>{" "}
-                <span className="text-xs text-slate-500">
-                  ({relativeTime(tx.timestamp)})
+              <div className="flex items-center gap-2">
+                <span className="text-slate-200">
+                  {formatTimestamp(tx.timestamp)}
                 </span>
-              </>
+                <span className="text-[10px] font-mono text-slate-500 bg-white/[0.03] px-2 py-0.5 rounded">
+                  {relativeTime(tx.timestamp)}
+                </span>
+              </div>
             ) : (
               "—"
             )}
           </DetailRow>
-          <DetailRow label="Position in Block">
-            <span className="font-mono">{tx.index}</span>
-          </DetailRow>
           <DetailRow label="From">
             <AddressLink addr={tx.from} />
           </DetailRow>
-          <DetailRow label="To">
+          <DetailRow label="Interacted To">
             {tx.to ? (
               <AddressLink addr={tx.to} />
             ) : (
-              <span className="text-slate-500 italic">Contract Creation</span>
+              <span className="text-slate-500 italic bg-white/[0.03] px-2 py-1 rounded border border-white/[0.05] text-xs">
+                Contract Creation
+              </span>
             )}
           </DetailRow>
-          <DetailRow label="Value">
-            <span className="font-semibold">{tx.value}</span>{" "}
-            <span className="text-slate-500">ETH</span>
-            <p className="text-xs text-slate-500 font-mono break-all mt-1">
-              {tx.valueWei.toString()} wei
-            </p>
+          <DetailRow label="Value Transferred">
+            <div className="flex flex-col">
+              <div>
+                <span className="font-bold text-white">{tx.value}</span>{" "}
+                <span className="text-slate-500 text-xs">ETH</span>
+              </div>
+              <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                {tx.valueWei.toString()} wei
+              </span>
+            </div>
           </DetailRow>
         </DetailGrid>
       </div>
 
-      <div className="card mb-4">
-        <h2 className="text-lg font-semibold text-slate-900 mb-3">
-          Gas &amp; Fee
-        </h2>
-        <DetailGrid>
-          <DetailRow label="Gas Used">
-            <span className="font-mono">{Number(tx.gasUsed).toLocaleString()}</span>
-            {tx.gasLimit !== "0" && (
-              <span className="text-xs text-slate-500 ml-2">
-                / {Number(tx.gasLimit).toLocaleString()} limit (
-                {((Number(tx.gasUsed) / Number(tx.gasLimit)) * 100).toFixed(2)}%)
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* Gas & Fee */}
+        <div className="gsap-reveal opacity-0 translate-y-8 bg-[#0a0b18]/80 backdrop-blur-xl border border-white/[0.08] rounded-[2rem] p-6 sm:p-8 shadow-xl">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-6">
+            <Zap className="w-5 h-5 text-amber-400" /> Gas & Fee
+          </h2>
+          <DetailGrid>
+            <DetailRow label="Gas Used / Limit">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-slate-200">
+                    {Number(tx.gasUsed).toLocaleString()}
+                  </span>
+                  <span className="text-slate-500 text-xs">
+                    / {Number(tx.gasLimit).toLocaleString()}
+                  </span>
+                </div>
+                {tx.gasLimit !== "0" && (
+                  <div className="w-full bg-[#030308] h-1.5 rounded-full overflow-hidden mt-1 border border-white/[0.05]">
+                    <div
+                      className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
+                      style={{
+                        width: `${
+                          (Number(tx.gasUsed) / Number(tx.gasLimit)) * 100
+                        }%`,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </DetailRow>
+            <DetailRow label="Gas Price">
+              <span className="font-mono text-slate-300">
+                {Number(tx.gasPrice).toFixed(4)}{" "}
+                <span className="text-slate-500 text-[10px]">gwei</span>
               </span>
+            </DetailRow>
+            <DetailRow label="Tx Fee">
+              <span className="font-mono font-bold text-amber-400">
+                {tx.fee}{" "}
+                <span className="text-amber-400/50 text-[10px]">ETH</span>
+              </span>
+            </DetailRow>
+            {tx.maxFeePerGas && (
+              <DetailRow label="Max Fee Per Gas">
+                <span className="font-mono text-slate-400 text-xs">
+                  {Number(tx.maxFeePerGas).toFixed(4)} gwei
+                </span>
+              </DetailRow>
             )}
-          </DetailRow>
-          <DetailRow label="Gas Price">
-            <span className="font-mono">
-              {Number(tx.gasPrice).toFixed(4)} gwei
-            </span>
-          </DetailRow>
-          <DetailRow label="Transaction Fee">
-            <span className="font-mono font-semibold">{tx.fee} ETH</span>
-          </DetailRow>
-          {tx.maxFeePerGas && (
-            <DetailRow label="Max Fee Per Gas">
-              <span className="font-mono">
-                {Number(tx.maxFeePerGas).toFixed(4)} gwei
-              </span>
-            </DetailRow>
-          )}
-          {tx.maxPriorityFeePerGas && (
-            <DetailRow label="Max Priority Fee">
-              <span className="font-mono">
-                {Number(tx.maxPriorityFeePerGas).toFixed(4)} gwei
-              </span>
-            </DetailRow>
-          )}
-        </DetailGrid>
-      </div>
+            {tx.maxPriorityFeePerGas && (
+              <DetailRow label="Max Priority">
+                <span className="font-mono text-slate-400 text-xs">
+                  {Number(tx.maxPriorityFeePerGas).toFixed(4)} gwei
+                </span>
+              </DetailRow>
+            )}
+          </DetailGrid>
+        </div>
 
-      <div className="card mb-4">
-        <h2 className="text-lg font-semibold text-slate-900 mb-3">Tx Metadata</h2>
-        <DetailGrid>
-          <DetailRow label="Tx Type">
-            <span className="font-mono">
-              {tx.type} ({txTypeLabel(tx.type)})
-            </span>
-          </DetailRow>
-          <DetailRow label="Nonce">
-            <span className="font-mono">{tx.nonce}</span>
-          </DetailRow>
-          <DetailRow label="Chain ID">
-            <span className="font-mono">{tx.chainId}</span>
-          </DetailRow>
-          <DetailRow label="Block Hash">
-            <span className="font-mono text-xs break-all">
-              {tx.blockHash || "—"}
-            </span>
-          </DetailRow>
-        </DetailGrid>
+        {/* Metadata */}
+        <div className="gsap-reveal opacity-0 translate-y-8 bg-[#0a0b18]/80 backdrop-blur-xl border border-white/[0.08] rounded-[2rem] p-6 sm:p-8 shadow-xl">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-white mb-6">
+            <Database className="w-5 h-5 text-blue-400" /> Metadata
+          </h2>
+          <DetailGrid>
+            <DetailRow label="Tx Type">
+              <div className="flex flex-col gap-1">
+                <span className="font-mono text-slate-200 text-xs bg-white/[0.03] border border-white/[0.05] px-2 py-1 rounded w-max">
+                  Type {tx.type}
+                </span>
+                <span className="text-[10px] text-slate-500 uppercase tracking-widest">
+                  {txTypeLabel(tx.type)}
+                </span>
+              </div>
+            </DetailRow>
+            <DetailRow label="Nonce">
+              <span className="font-mono text-slate-300">{tx.nonce}</span>
+            </DetailRow>
+            <DetailRow label="Chain ID">
+              <span className="font-mono text-slate-300">{tx.chainId}</span>
+            </DetailRow>
+            <DetailRow label="Block Hash">
+              <span className="font-mono text-[10px] text-slate-500 break-all">
+                {tx.blockHash || "—"}
+              </span>
+            </DetailRow>
+          </DetailGrid>
+        </div>
       </div>
 
       {/* Event Logs */}
-      <div className="card mb-4">
-        <h2 className="text-lg font-semibold text-slate-900 mb-3">
-          Event Logs ({tx.logs.length})
-        </h2>
+      <div className="gsap-reveal opacity-0 translate-y-8 bg-[#0a0b18]/80 backdrop-blur-xl border border-white/[0.08] rounded-[2rem] p-6 sm:p-8 mb-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-white">
+            <Terminal className="w-5 h-5 text-violet-400" /> Event Logs
+          </h2>
+          <span className="text-[10px] font-mono text-violet-400 bg-violet-500/10 border border-violet-500/20 px-3 py-1 rounded-full uppercase tracking-widest">
+            {tx.logs.length} Emitted
+          </span>
+        </div>
+
         {tx.logs.length === 0 ? (
-          <p className="text-sm text-slate-500">
-            Tidak ada event yang di-decode. Mungkin event dari contract lain
-            atau tx tidak emit event.
-          </p>
+          <div className="bg-[#030308] border border-white/[0.05] rounded-xl p-8 text-center">
+            <p className="text-sm font-mono text-slate-500">
+              No decoded events found in this transaction.
+            </p>
+          </div>
         ) : (
-          <ol className="space-y-3">
+          <ol className="space-y-4">
             {tx.logs.map((log, i) => (
               <li
                 key={`${log.logIndex}-${i}`}
-                className="border border-slate-200 rounded-md p-3 bg-slate-50"
+                className="bg-[#030308] border border-white/[0.05] rounded-xl p-4 sm:p-5 relative overflow-hidden group"
               >
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-violet-500/50" />
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <span className="font-mono text-xs font-bold text-violet-300 bg-violet-500/10 border border-violet-500/20 px-2 py-1 rounded">
                     {log.contractName}
                   </span>
-                  <span className="font-mono font-semibold text-slate-900">
+                  <span className="font-mono font-bold text-white text-sm">
                     {log.eventName}
                   </span>
-                  <span className="text-xs text-slate-500">
-                    #{log.logIndex}
+                  <span className="text-[10px] font-mono text-slate-500 ml-auto bg-white/[0.02] px-2 py-1 rounded">
+                    Log Index #{log.logIndex}
                   </span>
                 </div>
-                <dl className="text-xs space-y-1 font-mono">
-                  {Object.entries(log.args).map(([k, v]) => (
-                    <div key={k} className="flex gap-2">
-                      <dt className="text-slate-500 w-32 flex-shrink-0">{k}:</dt>
-                      <dd className="break-all text-slate-900">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
+                <div className="bg-black/50 border border-white/[0.03] rounded-lg p-3 sm:p-4 overflow-x-auto">
+                  <dl className="text-xs font-mono grid grid-cols-1 gap-y-2">
+                    {Object.entries(log.args).map(([k, v]) => (
+                      <div
+                        key={k}
+                        className="flex flex-col sm:flex-row sm:gap-4"
+                      >
+                        <dt className="text-slate-500 sm:w-32 shrink-0">
+                          {k}:
+                        </dt>
+                        <dd className="text-slate-300 break-all">
+                          {String(v)}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
               </li>
             ))}
           </ol>
@@ -299,13 +429,23 @@ export default function TxDetailPage() {
       </div>
 
       {/* Input Data */}
-      <details className="card">
-        <summary className="cursor-pointer font-medium">
-          Input Data (raw calldata)
+      <details className="gsap-reveal opacity-0 translate-y-8 bg-[#0a0b18]/80 backdrop-blur-xl border border-white/[0.08] rounded-[2rem] overflow-hidden group transition-all duration-300 open:border-cyan-500/30">
+        <summary className="cursor-pointer p-6 sm:p-8 flex items-center justify-between select-none bg-white/[0.01]">
+          <div className="flex items-center gap-3">
+            <Code2 className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" />
+            <span className="text-lg font-bold text-white">Input Data</span>
+          </div>
+          <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest bg-white/[0.05] px-2 py-1 rounded">
+            Raw Calldata
+          </span>
         </summary>
-        <pre className="mt-3 text-xs font-mono bg-slate-50 p-3 rounded break-all whitespace-pre-wrap">
-          {tx.input}
-        </pre>
+        <div className="p-6 sm:p-8 pt-0">
+          <div className="bg-[#030308] border border-white/[0.05] rounded-xl p-4 sm:p-6 overflow-x-auto">
+            <pre className="text-xs font-mono text-cyan-400/80 break-all whitespace-pre-wrap leading-relaxed">
+              {tx.input}
+            </pre>
+          </div>
+        </div>
       </details>
     </div>
   );
@@ -327,7 +467,11 @@ function txTypeLabel(t: number): string {
 }
 
 function DetailGrid({ children }: { children: React.ReactNode }) {
-  return <dl className="space-y-3">{children}</dl>;
+  return (
+    <div className="flex flex-col divide-y divide-white/[0.05] border-y border-white/[0.05]">
+      {children}
+    </div>
+  );
 }
 
 function DetailRow({
@@ -338,9 +482,11 @@ function DetailRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-1 sm:gap-3 text-sm">
-      <dt className="text-slate-500 font-medium">{label}</dt>
-      <dd className="text-slate-900">{children}</dd>
+    <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2 sm:gap-4 py-4 items-center">
+      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+        {label}
+      </div>
+      <div className="text-sm">{children}</div>
     </div>
   );
 }
@@ -350,16 +496,22 @@ function AddressLink({ addr }: { addr: string }) {
   return (
     <Link
       href={`/explorer/address/${addr}`}
-      className="text-blue-600 hover:underline font-mono"
+      className="group flex items-center gap-2 w-max"
       title={addr}
     >
       {label ? (
         <>
-          <span className="font-sans">{label}</span>{" "}
-          <span className="text-xs text-slate-500">({shortAddr(addr)})</span>
+          <span className="font-mono text-sm text-cyan-400 group-hover:text-cyan-300 transition-colors">
+            {label}
+          </span>
+          <span className="text-[10px] font-mono text-slate-500 bg-white/[0.03] px-1.5 py-0.5 rounded border border-white/[0.05]">
+            {shortAddr(addr)}
+          </span>
         </>
       ) : (
-        addr
+        <span className="font-mono text-sm text-cyan-400 group-hover:text-cyan-300 transition-colors">
+          {addr}
+        </span>
       )}
     </Link>
   );

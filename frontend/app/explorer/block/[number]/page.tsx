@@ -214,12 +214,12 @@ export default function BlockDetailPage() {
           </h2>
           <DetailGrid>
             <DetailRow label="Gas Used">
-              <div className="flex flex-col gap-1.5 w-full">
-                <div className="flex items-center justify-between gap-2">
+              <div className="w-full flex flex-col gap-2.5">
+                <div className="flex flex-wrap items-center gap-3">
                   <span className="font-mono text-slate-200">
                     {Number(block.gasUsed).toLocaleString()}
                   </span>
-                  <span className="text-amber-400 text-[10px] font-mono font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                  <span className="text-amber-400 text-[10px] font-mono font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 whitespace-nowrap">
                     {gasUsagePct.toFixed(2)}%
                   </span>
                 </div>

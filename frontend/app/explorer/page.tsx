@@ -87,8 +87,12 @@ export default function ExplorerHome() {
     };
   }, []);
 
+  const hasAnimated = useRef(false);
+
   useEffect(() => {
-    if (!loading && containerRef.current) {
+    if (!loading && containerRef.current && !hasAnimated.current) {
+      hasAnimated.current = true; 
+
       const ctx = gsap.context(() => {
         gsap.to(".gsap-reveal", {
           y: 0,
@@ -98,9 +102,10 @@ export default function ExplorerHome() {
           ease: "power4.out",
         });
       }, containerRef);
-      return () => ctx.revert();
+
+    
     }
-  }, [loading, stats]);
+  }, [loading]); 
 
   const destMap = useMemo(() => {
     return new Map(destinations.map((d) => [d.id, d]));
